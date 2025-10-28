@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:EasyPedidos.Pages"
+             xmlns:viewmodels="clr-namespace:EasyPedidos.ViewModels"
+             x:Class="EasyPedidos.Pages.PedidoPage"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Cabeçalho -->
+            <Label Text="Novo Pedido" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" />
+
+            <!-- Seleção de Mesa -->
+            <Frame BackgroundColor="SlateGray" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Mesa:" FontSize="16" FontAttributes="Bold"/>
+                    <Picker ItemsSource="{Binding Mesas}"
+                            SelectedItem="{Binding MesaSelecionada}"
+                            Title="Selecione a Mesa" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Cardápio -->
+            <Frame BackgroundColor="SlateGray" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Cardápio:" FontSize="16" FontAttributes="Bold"/>
+
+                    <Picker ItemsSource="{Binding Cardapio}"
+                            SelectedItem="{Binding ItemSelecionado}"
+                            ItemDisplayBinding="{Binding Descricao}"
+                            Title="Selecione um Item" />
+
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                        <Entry Text="{Binding Quantidade}" 
+                               Placeholder="Quantidade" 
+                               Keyboard="Numeric"
+                               Grid.Column="0"/>
+
+                        <Button Text="Adicionar" 
+                                Command="{Binding AdicionarItemCommand}"
+                                BackgroundColor="#2196F3"
+                                TextColor="White"
+                                Grid.Column="1"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="SlateGray" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Observações:" FontSize="16" FontAttributes="Bold"/>
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                        <Editor Text="{Binding Observacao}" 
+                                Grid.Column="0"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            <!-- Itens do Pedido -->
+            <Frame BackgroundColor="SlateGray" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Itens do Pedido:" FontSize="16" FontAttributes="Bold"/>
+
+                    <CollectionView ItemsSource="{Binding ItensPedido}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                                    <Label Text="{Binding Nome}" 
+                                           Grid.Column="0"
+                                           VerticalOptions="Center"/>
+
+                                    <Label Text="{Binding Quantidade, StringFormat='{0}x'}" 
+                                           Grid.Column="1"
+                                           VerticalOptions="Center"/>
+
+                                    <Button Text="❌" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:PedidoPage}}, Path=BindingContext.RemoverItemCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="Transparent"
+                                            Grid.Column="2"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="{Binding TotalPedido, StringFormat='Total: R$ {0:F2}'}" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="End"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Botões de Ação -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                <Button Text="Cancelar" 
+                        Command="{Binding CancelarCommand}"
+                        BackgroundColor="#f44336"
+                        TextColor="White"
+                        Grid.Column="0"/>
+
+                <Button Text="Finalizar Pedido" 
+                        Command="{Binding FinalizarPedidoCommand}"
+                        BackgroundColor="#4CAF50"
+                        TextColor="White"
+                        Grid.Column="1"/>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
