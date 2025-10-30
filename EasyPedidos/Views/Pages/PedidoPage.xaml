@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:EasyPedidos.Pages"
-             xmlns:viewmodels="clr-namespace:EasyPedidos.ViewModels"
+             xmlns:helpers="clr-namespace:EasyPedidos.Helpers"
              x:Class="EasyPedidos.Pages.PedidoPage"
              Title="{Binding Title}">
 
@@ -50,15 +50,6 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame BackgroundColor="SlateGray" Padding="15">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Observações:" FontSize="16" FontAttributes="Bold"/>
-                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-                        <Editor Text="{Binding Observacao}" 
-                                Grid.Column="0"/>
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
             <!-- Itens do Pedido -->
             <Frame BackgroundColor="SlateGray" Padding="15">
                 <VerticalStackLayout Spacing="10">
@@ -67,21 +58,42 @@
                     <CollectionView ItemsSource="{Binding ItensPedido}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="10" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
-                                    <Label Text="{Binding Nome}" 
-                                           Grid.Column="0"
-                                           VerticalOptions="Center"/>
+                                <Frame BackgroundColor="#2F4F4F" Padding="10" Margin="0,5">
+                                    <VerticalStackLayout Spacing="8">
+                                        <!-- Linha 1: Nome, Quantidade e Botão Remover -->
+                                        <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                                            <Label Text="{Binding Nome}" 
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"
+                                                   Grid.Column="0"/>
 
-                                    <Label Text="{Binding Quantidade, StringFormat='{0}x'}" 
-                                           Grid.Column="1"
-                                           VerticalOptions="Center"/>
+                                            <Label Text="{Binding Quantidade, StringFormat='{0}x'}" 
+                                                   FontSize="12"
+                                                   TextColor="LightGray"
+                                                   Grid.Column="1"/>
 
-                                    <Button Text="❌" 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:PedidoPage}}, Path=BindingContext.RemoverItemCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="Transparent"
-                                            Grid.Column="2"/>
-                                </Grid>
+                                            <Button Text="❌" 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:PedidoPage}}, Path=BindingContext.RemoverItemCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="Red"
+                                                    FontSize="12"
+                                                    Grid.Column="2"/>
+                                        </Grid>
+
+                                        <!-- Linha 2: Editor de Observação -->
+                                        <Editor Text="{Binding Observacao}"
+                                                Placeholder="Observações para este item..."
+                                                PlaceholderColor="LightGray"
+                                                BackgroundColor="#1E2E2E"
+                                                TextColor="White"
+                                                FontSize="11"
+                                                AutoSize="TextChanges"
+                                                MaximumHeightRequest="80"/>
+                                    </VerticalStackLayout>
+
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -89,6 +101,7 @@
                     <Label Text="{Binding TotalPedido, StringFormat='Total: R$ {0:F2}'}" 
                            FontSize="18" 
                            FontAttributes="Bold"
+                           TextColor="White"
                            HorizontalOptions="End"/>
                 </VerticalStackLayout>
             </Frame>
@@ -101,8 +114,8 @@
                         TextColor="White"
                         Grid.Column="0"/>
 
-                <Button Text="Finalizar Pedido" 
-                        Command="{Binding FinalizarPedidoCommand}"
+                <Button Text="Salvar Pedido" 
+                        Command="{Binding SalvarPedidoCommand}"
                         BackgroundColor="#4CAF50"
                         TextColor="White"
                         Grid.Column="1"/>

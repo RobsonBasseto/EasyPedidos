@@ -12,8 +12,16 @@ namespace EasyPedidos.ViewModels
         {
             Title = "Editar Pedido";
             PopularCardapio();
+            //PopularItensPedido();
         }
-
+        partial void OnPedidoEditadoChanged(Pedido value)
+        {
+            if (value != null)
+            {
+                Title = $"Editando Pedido - {value.Mesa}";
+                PopularItensPedido(); // Só chama aqui, quando o pedido não é nulo
+            }
+        }
         [ObservableProperty]
         private Pedido pedidoEditado;
 
@@ -23,7 +31,11 @@ namespace EasyPedidos.ViewModels
         [ObservableProperty]
         private int quantidadeNova = 1;
 
+        [ObservableProperty]
+        private decimal totalPedido;
+
         public ObservableCollection<ItemCardapio> Cardapio { get; } = new();
+        public ObservableCollection<ItemPedido> ItensPedido { get; } = new();
 
         private void PopularCardapio()
         {
@@ -34,21 +46,31 @@ namespace EasyPedidos.ViewModels
             Cardapio.Add(new ItemCardapio { Id = 5, Nome = "Refrigerante", Preco = 6.00m });
             Cardapio.Add(new ItemCardapio { Id = 6, Nome = "Suco", Preco = 8.00m });
         }
+        private void PopularItensPedido()
+        {
+            foreach (var item in PedidoEditado.Itens)
+            {
+                ItensPedido.Add(item);
+            }
+            CalcularTotal();
+        }
 
         [RelayCommand]
         private void AdicionarItem()
         {
-            if (itemSelecionado == null || quantidadeNova <= 0) return;
+            if (ItemSelecionado == null || QuantidadeNova <= 0)
+                return;
 
-            var novoItem = new ItemPedido
+            var itemPedido = new ItemPedido
             {
-                Id = itemSelecionado.Id,
-                Nome = itemSelecionado.Nome,
-                Preco = itemSelecionado.Preco,
-                Quantidade = quantidadeNova
+                Id = ItemSelecionado.Id,
+                Nome = ItemSelecionado.Nome,
+                Preco = ItemSelecionado.Preco,
+                Quantidade = QuantidadeNova
             };
 
-            pedidoEditado.Itens.Add(novoItem);
+            ItensPedido.Add(itemPedido);
+            CalcularTotal();
             LimparCamposItem();
         }
 
@@ -57,7 +79,7 @@ namespace EasyPedidos.ViewModels
         {
             if (item != null)
             {
-                pedidoEditado.Itens.Remove(item);
+                ItensPedido.Remove(item);
             }
         }
 
@@ -70,8 +92,7 @@ namespace EasyPedidos.ViewModels
         [RelayCommand]
         private async Task SalvarAlteracoes()
         {
-            // Aqui você salvaria as alterações no banco de dados
-            // Por enquanto, apenas voltamos para a página anterior
+            PedidoEditado.Itens = ItensPedido.ToList();
 
             await Shell.Current.DisplayAlert("Sucesso", "Alterações salvas com sucesso!", "OK");
             await Shell.Current.GoToAsync("..");
@@ -82,13 +103,20 @@ namespace EasyPedidos.ViewModels
         {
             bool confirmar = await Shell.Current.DisplayAlert(
                 "Confirmar",
-                "Deseja cancelar as alterações?",
+                "Deseja cancelar o pedido?",
                 "Sim", "Não");
 
             if (confirmar)
             {
+                PedidoEditado.Status = StatusPedidoEnum.Cancelado;
                 await Shell.Current.GoToAsync("..");
+                MessagingCenter.Send(this, "PedidoAtualizado");
             }
+        }
+
+        private void CalcularTotal()
+        {
+            TotalPedido = ItensPedido.Sum(i => i.Preco * i.Quantidade);
         }
     }
 }

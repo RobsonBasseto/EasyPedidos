@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:EasyPedidos.Pages"
+             xmlns:helpers="clr-namespace:EasyPedidos.Helpers"
              x:Class="EasyPedidos.Pages.DetalhesPedidoPage"
              Title="Detalhes do Pedido">
 
@@ -42,7 +43,7 @@
                                FontSize="16" 
                                FontAttributes="Bold"
                                Grid.Column="0"/>
-                        <Label Text="{Binding PedidoSelecionado.Status}" 
+                        <Label Text="{Binding PedidoSelecionado.Status, Converter={x:Static helpers:EnumToDescriptionConverter.Instance}}" 
                                FontSize="16"
                                Grid.Column="1"/>
                     </Grid>
@@ -59,6 +60,20 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <!-- REMOVA esta seção de observações gerais -->
+            <!-- <Frame BackgroundColor="SlateGray" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Observações:" FontSize="16" FontAttributes="Bold"/>
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                        <Label Text="{Binding PedidoSelecionado.Observacao}"
+                               BackgroundColor="SlateGray"
+                               TextColor="White"
+                               FontSize="14"
+                               Margin="5"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame> -->
+
             <!-- Itens do Pedido -->
             <Frame BackgroundColor="SlateGray" Padding="15">
                 <VerticalStackLayout Spacing="10">
@@ -69,22 +84,35 @@
                     <CollectionView ItemsSource="{Binding PedidoSelecionado.Itens}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="10" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
-                                    <Label Text="{Binding Nome}" 
-                                           FontSize="16"
-                                           Grid.Column="0"
-                                           VerticalOptions="Center"/>
+                                <Frame BackgroundColor="#2F4F4F" Padding="10" Margin="0,5">
+                                    <VerticalStackLayout Spacing="8">
+                                        <!-- Linha 1: Nome, Quantidade e Preço -->
+                                        <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                                            <Label Text="{Binding Nome}" 
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"
+                                                   Grid.Column="0"/>
 
-                                    <Label Text="{Binding Quantidade, StringFormat='{0}x'}" 
-                                           FontSize="14"
-                                           Grid.Column="1"
-                                           VerticalOptions="Center"/>
+                                            <Label Text="{Binding Quantidade, StringFormat='{0}x'}" 
+                                                   FontSize="12"
+                                                   TextColor="LightGray"
+                                                   Grid.Column="1"/>
 
-                                    <Label Text="{Binding Preco, StringFormat='R$ {0:F2}'}" 
-                                           FontSize="14"
-                                           Grid.Column="2"
-                                           VerticalOptions="Center"/>
-                                </Grid>
+                                            <Label Text="{Binding Preco, StringFormat='R$ {0:F2}'}" 
+                                                   FontSize="12"
+                                                   TextColor="LightGray"
+                                                   Grid.Column="2"/>
+                                        </Grid>
+
+                                        <!-- Linha 2: Observação do Item (se houver) -->
+                                        <Label Text="{Binding Observacao}" 
+                                               FontSize="11"
+                                               TextColor="LightBlue"
+                                               FontAttributes="Italic"
+                                               LineBreakMode="WordWrap"/>
+                                    </VerticalStackLayout>
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -117,6 +145,13 @@
                         BackgroundColor="#2196F3"
                         TextColor="White"
                         Grid.Column="1"/>
+            </Grid>
+
+            <Grid>
+                <Button Text="Concluir" 
+                        Command="{Binding ConcluirPedidoCommand}"
+                        BackgroundColor="YellowGreen"
+                        TextColor="White"/>
             </Grid>
 
         </VerticalStackLayout>

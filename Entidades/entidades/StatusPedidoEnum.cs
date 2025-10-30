@@ -1,9 +1,18 @@
-﻿namespace Entidades.entidades
+﻿using System.ComponentModel;
+
+namespace Entidades.entidades
 {
     public enum StatusPedidoEnum
     {
+        [Description("Todos")]
+        Todos,
+        [Description("Em Andamento")]
         EmAndamento,
+        [Description("Pronto")]
         Pronto,
-        Faturado
+        [Description("Faturado")]
+        Faturado,
+        [Description("Cancelado")]
+        Cancelado
     }
 }

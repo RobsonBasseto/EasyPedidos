@@ -21,6 +21,8 @@ namespace EasyPedidos.ViewModels
         [ObservableProperty]
         private string mesaSelecionada;
 
+        
+
         [ObservableProperty]
         private ItemCardapio itemSelecionado;
 
@@ -91,7 +93,7 @@ namespace EasyPedidos.ViewModels
         }
 
         [RelayCommand]
-        private async Task FinalizarPedido()
+        private async Task SalvarPedido()
         {
             if (string.IsNullOrEmpty(MesaSelecionada))
             {
