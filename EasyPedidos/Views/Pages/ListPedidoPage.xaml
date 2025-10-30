@@ -84,7 +84,7 @@
 
                                     <Button Text="Editar" 
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.EditarPedidoCommand}"
-                                            CommandParameter="{Binding .}"
+                                            CommandParameter="{Binding .}" 
                                             BackgroundColor="#4CAF50"
                                             TextColor="White"
                                             IsVisible="{Binding PodeEditar}"
