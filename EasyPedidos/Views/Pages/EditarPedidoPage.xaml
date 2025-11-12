@@ -24,9 +24,9 @@
                     <Picker ItemsSource="{Binding LocaisConsumo}"
                             SelectedItem="{Binding Pedido.LocalConsumo, Mode=TwoWay}"
                             Title="Selecione">
-                        <Picker.ItemDisplayBinding>
+                        <!--<Picker.ItemDisplayBinding>
                             <Binding Converter="{x:Static helpers:EnumToDescriptionConverter.Instance}" />
-                        </Picker.ItemDisplayBinding>
+                        </Picker.ItemDisplayBinding>-->
                     </Picker>
 
                 </VerticalStackLayout>

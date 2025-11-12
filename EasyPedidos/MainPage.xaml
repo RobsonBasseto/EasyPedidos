@@ -1,33 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EasyPedidos.MainPage">
+             x:Class="EasyPedidos.MainPage"
+             BackgroundColor="#FFFFFF">
+
+    <!-- RESOURCES -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TitleStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#FF6B35" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+            <Style x:Key="SubtitleStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="#555555" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,5,0,30" />
+            </Style>
+            <Style x:Key="ActionButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#FF6B35" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HeightRequest" Value="60" />
+                <Setter Property="Margin" Value="0,10" />
+                <Setter Property="Padding" Value="20,0" />
+                <!-- REMOVIDO Shadow do Button (conflita com Frame) -->
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a race car number eight" />
+            Padding="30,50,30,30"
+            Spacing="30"
+            VerticalOptions="CenterAndExpand">
 
-            <Label
-                Text="Easy Pedidos"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+            <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
+                <Image
+                    Source="logo.png"
+                    HeightRequest="120"
+                    WidthRequest="120"
+                    HorizontalOptions="Center" />
+                <Label Text="EasyPedidos" Style="{StaticResource TitleStyle}" />
+                <Label Text="Gestão simples, pedidos rápidos." Style="{StaticResource SubtitleStyle}" />
+            </VerticalStackLayout>
 
-            <Button
-                x:Name="AddPedido"
-                Text="Novo Pedido"   
-                Clicked="OnNovoPedidoClicked"
-                HorizontalOptions="Fill" />
-            <Button
-                x:Name="ListPedidos"
-                Text="Pedidos"             
-                Clicked="OnListarPedidosClicked"
-                HorizontalOptions="Fill" />
+            <VerticalStackLayout Spacing="0">
+                <Button
+                        x:Name="AddPedido"
+                        Text="Novo Pedido"
+                        Clicked="OnNovoPedidoClicked"
+                        Style="{StaticResource ActionButton}"
+                        ImageSource="plus_circle.png"
+                        HorizontalOptions="Fill" />
+
+                <Button
+                        x:Name="ListPedidos"
+                        Text="Ver Pedidos"
+                        Clicked="OnListarPedidosClicked"
+                        Style="{StaticResource ActionButton}"
+                        BackgroundColor="#F5F5F5"
+                        TextColor="#FF6B35"
+                        ImageSource="list.png"
+                        HorizontalOptions="Fill" />
+            </VerticalStackLayout>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

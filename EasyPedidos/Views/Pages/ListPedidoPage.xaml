@@ -11,9 +11,9 @@
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Filtrar Pedidos:" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" />
                     <Picker Title="Selecione o Filtro" ItemsSource="{Binding Filtros}" SelectedItem="{Binding FiltroSelecionado}" HorizontalOptions="FillAndExpand">
-                        <Picker.ItemDisplayBinding>
+                        <!--<Picker.ItemDisplayBinding>
                             <Binding Converter="{x:Static helpers:EnumToDescriptionConverter.Instance}" />
-                        </Picker.ItemDisplayBinding>
+                        </Picker.ItemDisplayBinding>-->
                     </Picker>
                     <Button Text="Atualizar Lista" Command="{Binding AtualizarListaCommand}" BackgroundColor="#2196F3" TextColor="White" HorizontalOptions="FillAndExpand" />
                 </VerticalStackLayout>

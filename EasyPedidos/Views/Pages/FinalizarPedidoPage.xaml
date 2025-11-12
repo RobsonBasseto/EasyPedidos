@@ -52,9 +52,9 @@
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Forma de Pagamento:" FontSize="16" FontAttributes="Bold"/>
                     <Picker Title="Selecione..." ItemsSource="{Binding FormasPagamento}" SelectedItem="{Binding FormaPagamentoSelecionada}">
-                        <Picker.ItemDisplayBinding>
+                        <!--<Picker.ItemDisplayBinding>
                             <Binding Converter="{x:Static helpers:EnumToDescriptionConverter.Instance}" />
-                        </Picker.ItemDisplayBinding>
+                        </Picker.ItemDisplayBinding>-->
                     </Picker>
                     <Frame BackgroundColor="#2F4F4F" Padding="10" IsVisible="{Binding MostrarCampoDinheiro}">
                         <VerticalStackLayout Spacing="8">
