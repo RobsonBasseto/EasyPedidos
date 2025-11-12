@@ -36,9 +36,10 @@ namespace Models
         [ObservableProperty]
         private string _identificador = string.Empty; // Mesa ou Placa do Carro
 
+        [ObservableProperty]
+        public decimal _total;
+
         // Propriedades calculadas (atualizam automaticamente!)
-        
-        public decimal Total => Itens.Sum(i => i.Preco * i.Quantidade);
 
         
         public bool PodeEditar => Status == StatusPedidoEnum.EmAndamento || Status == StatusPedidoEnum.Pronto;

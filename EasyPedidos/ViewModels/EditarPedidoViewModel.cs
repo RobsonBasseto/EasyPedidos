@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using EasyPedidos.Pages;
 using Entidades.entidades;
 using Models;
 using System.Collections.ObjectModel;
@@ -20,11 +21,15 @@ namespace EasyPedidos.ViewModels
             if (value != null)
             {
                 Title = $"Editando Pedido - {value.Identificador}";
+                PedidoOld = ClonePedido(value); 
             }
         }
 
         [ObservableProperty]
         private PedidoModel _pedido;
+
+
+        public PedidoModel PedidoOld;
 
         [ObservableProperty]
         private ItemCardapioModel _itemSelecionado;
@@ -85,13 +90,17 @@ namespace EasyPedidos.ViewModels
         private async Task SalvarAlteracoes()
         {
             if (Pedido == null) return;
-            Pedido.Status = StatusPedidoEnum.EmAndamento;
+
             PedidoViewModel.AtualizarPedido(Pedido);
-            await Shell.Current.DisplayAlert("Sucesso", "Alterações salvas!", "OK");
-            await Shell.Current.GoToAsync("..", new Dictionary<string, object>
+
+            // AVISA A PÁGINA QUE SALVOU
+            if (Shell.Current.CurrentPage is EditarPedidoPage page)
             {
-                { "Pedido", Pedido }
-            });
+                page.MarcarComoSalvo();
+            }
+
+            await Shell.Current.DisplayAlert("Sucesso", "Alterações salvas!", "OK");
+            await Shell.Current.GoToAsync("..");
         }
 
         [RelayCommand]
@@ -106,11 +115,33 @@ namespace EasyPedidos.ViewModels
             {
                 Pedido.Status = StatusPedidoEnum.Cancelado;
                 PedidoViewModel.AtualizarPedido(Pedido);
-                await Shell.Current.GoToAsync("..", new Dictionary<string, object>
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+        private PedidoModel ClonePedido(PedidoModel original)
+        {
+            var clone = new PedidoModel
+            {
+                Id = original.Id,
+                Identificador = original.Identificador,
+                IsMesa = original.IsMesa,
+                LocalConsumo = original.LocalConsumo,
+                Total = original.Total
+            };
+
+            foreach (var item in original.Itens)
+            {
+                clone.Itens.Add(new ItemPedidoModel
                 {
-                    { "Pedido", Pedido }
+                    Id = item.Id,
+                    Nome = item.Nome,
+                    Preco = item.Preco,
+                    Quantidade = item.Quantidade,
+                    Observacao = item.Observacao
                 });
             }
+
+            return clone;
         }
     }
 }

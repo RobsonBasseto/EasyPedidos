@@ -73,6 +73,7 @@ namespace EasyPedidos.ViewModels
             };
 
             Pedido.Itens.Add(item);
+            Pedido.Total = Pedido.Itens.Sum(i => i.Preco * i.Quantidade);
             LimparCamposItem();
         }
 

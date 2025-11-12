@@ -19,11 +19,11 @@
             <Frame BackgroundColor="SlateGray" Padding="15">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Onde o cliente vai consumir?"
-               FontSize="16"
-               FontAttributes="Bold" />
+                           FontSize="16"
+                           FontAttributes="Bold" />
                     <Picker ItemsSource="{Binding LocaisConsumo}"
-                SelectedItem="{Binding Pedido.LocalConsumo, Mode=TwoWay}"
-                Title="Selecione">
+                            SelectedItem="{Binding Pedido.LocalConsumo, Mode=TwoWay}"
+                            Title="Selecione">
                         <Picker.ItemDisplayBinding>
                             <Binding Converter="{x:Static helpers:EnumToDescriptionConverter.Instance}" />
                         </Picker.ItemDisplayBinding>
@@ -61,7 +61,7 @@
                                             <Button Text="❌" Command="{Binding Source={RelativeSource AncestorType={x:Type local:EditarPedidoPage}}, Path=BindingContext.RemoverItemCommand}"
                                                     CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="Red" FontSize="12" Grid.Column="2"/>
                                         </Grid>
-                                        <Editor Text="{Binding Observacao}" Placeholder="Observações..." BackgroundColor="#1E2E2E" TextColor="White" FontSize="11" AutoSize="TextChanges" MaximumHeightRequest="80"/>
+                                        <Editor Text="{Binding Pedido.Observacao}" Placeholder="Observações..." BackgroundColor="#1E2E2E" TextColor="White" FontSize="11" AutoSize="TextChanges" MaximumHeightRequest="80"/>
                                     </VerticalStackLayout>
                                 </Frame>
                             </DataTemplate>

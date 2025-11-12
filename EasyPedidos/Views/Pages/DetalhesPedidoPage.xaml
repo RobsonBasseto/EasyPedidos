@@ -67,7 +67,7 @@
             </Frame>
 
             <!-- Ações -->
-            <Grid IsVisible="{Binding PodeEditar}" ColumnDefinitions="*, *" ColumnSpacing="10">
+            <Grid IsVisible="{Binding Pedido.PodeEditar}" ColumnDefinitions="*, *" ColumnSpacing="10">
                 <Button Text="Editar Pedido" Command="{Binding EditarPedidoCommand}" BackgroundColor="#2196F3" TextColor="White" Grid.Column="1"/>
                 <Button Text="Concluir" Command="{Binding ConcluirPedidoCommand}" BackgroundColor="YellowGreen" TextColor="White"/>
             </Grid>
