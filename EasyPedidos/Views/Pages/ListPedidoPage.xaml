@@ -5,91 +5,47 @@
              xmlns:helpers="clr-namespace:EasyPedidos.Helpers"
              x:Class="EasyPedidos.Pages.ListPedidoPage"
              Title="{Binding Title}">
-
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
-
-            <!-- Cabeçalho e Filtro -->
             <Frame BackgroundColor="SlateGray" Padding="15">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Filtrar Pedidos:" 
-                           FontSize="16" 
-                           FontAttributes="Bold" 
-                           HorizontalOptions="Center" />
-
-                    <Picker Title="Selecione o Filtro"
-                            ItemsSource="{Binding Filtros}"
-                            SelectedItem="{Binding FiltroSelecionado}"
-                            HorizontalOptions="FillAndExpand">
+                    <Label Text="Filtrar Pedidos:" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Picker Title="Selecione o Filtro" ItemsSource="{Binding Filtros}" SelectedItem="{Binding FiltroSelecionado}" HorizontalOptions="FillAndExpand">
                         <Picker.ItemDisplayBinding>
                             <Binding Converter="{x:Static helpers:EnumToDescriptionConverter.Instance}" />
                         </Picker.ItemDisplayBinding>
                     </Picker>
-
-                    <Button Text="Atualizar Lista" 
-                            Command="{Binding AtualizarListaCommand}"
-                            BackgroundColor="#2196F3"
-                            TextColor="White"
-                            HorizontalOptions="FillAndExpand" />
+                    <Button Text="Atualizar Lista" Command="{Binding AtualizarListaCommand}" BackgroundColor="#2196F3" TextColor="White" HorizontalOptions="FillAndExpand" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Contador de Pedidos -->
             <Frame BackgroundColor="SlateGray" Padding="10">
-                <Label Text="{Binding Pedidos.Count, StringFormat='{0} pedido(s) encontrado(s)'}" 
-                       FontSize="14" 
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center" />
+                <Label Text="{Binding Pedidos.Count, StringFormat='{0} pedido(s) encontrado(s)'}" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" />
             </Frame>
 
-            <!-- Lista de Pedidos -->
             <CollectionView ItemsSource="{Binding Pedidos}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame BackgroundColor="SlateGray" Padding="15" Margin="0,5">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.VisualizarPedidoCommand}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
                             <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*, Auto">
-                                    <Label Text="{Binding Mesa}" 
-                                           FontSize="18" 
-                                           FontAttributes="Bold"
-                                           TextColor="White"
-                                           Grid.Column="0"/>
-
+                                    <Label Text="{Binding Identificador}" FontSize="18" FontAttributes="Bold" TextColor="White" Grid.Column="0"/>
                                     <HorizontalStackLayout Spacing="5" Grid.Column="1">
                                         <Label Text="🕒" FontSize="10"/>
-                                        <Label Text="{Binding DataHora, StringFormat='{0:HH:mm}'}" 
-                                               FontSize="12"
-                                               TextColor="LightGray"/>
+                                        <Label Text="{Binding DataHora, StringFormat='{0:HH:mm}'}" FontSize="12" TextColor="LightGray"/>
                                     </HorizontalStackLayout>
                                 </Grid>
-
-                                <Label Text="{Binding ItensResumido}" 
-                                       FontSize="14"
-                                       TextColor="White"/>
-
-                                <Grid>
-                                    <Label Text="{Binding Status, Converter={x:Static helpers:EnumToDescriptionConverter.Instance}}" 
-                                           FontSize="12"
-                                           TextColor="White"
-                                           Grid.Column="0"/>
-                                </Grid>
-
-                                <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
-                                    <Button Text="Visualizar" 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.VisualizarPedidoCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="#FF9800"
-                                            TextColor="White"
-                                            Grid.Column="0"/>
-
-                                    <Button Text="Editar" 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.EditarPedidoCommand}"
-                                            CommandParameter="{Binding .}" 
-                                            BackgroundColor="#4CAF50"
-                                            TextColor="White"
-                                            IsVisible="{Binding PodeEditar}"
-                                            Grid.Column="1"/>
-                                </Grid>
+                                <Label Text="{Binding ItensResumido}" FontSize="14" TextColor="White"/>
+                                <Label Text="{Binding StatusDescricao}" FontSize="12" TextColor="White"/>
+                                <Button Text="Finalizar Pedido"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.FinalizarPedidoCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="#FF5722" TextColor="White" FontSize="16" FontAttributes="Bold"
+                                        HorizontalOptions="Fill" IsVisible="{Binding PodeFinalizar}"/>
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>

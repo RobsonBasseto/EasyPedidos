@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using EasyPedidos.Helpers;
 using EasyPedidos.Pages;
 using Entidades.entidades;
+using Models;
 using System.Collections.ObjectModel;
 
 namespace EasyPedidos.ViewModels
@@ -15,26 +17,27 @@ namespace EasyPedidos.ViewModels
             FiltroSelecionado = StatusPedidoEnum.EmAndamento;
             CarregarPedidos();
 
-            MessagingCenter.Subscribe<DetalhesPedidoViewModel>(this, "PedidoAtualizado", (sender) =>
+            WeakReferenceMessenger.Default.Register<PedidoAtualizadoMessage>(this, (r, m) =>
             {
-                AplicarFiltro();
-            });
-            MessagingCenter.Subscribe<EditarPedidoViewModel>(this, "PedidoAtualizado", (sender) =>
-            {
-                AplicarFiltro();
+                CarregarPedidos();
             });
         }
 
-        [ObservableProperty]
-        private ObservableCollection<Pedido> pedidos = new();
+        ~ListPedidoViewModel()
+        {
+            MessagingCenter.Unsubscribe<object, PedidoModel>(this, "PedidoAtualizado");
+        }
 
         [ObservableProperty]
-        private ObservableCollection<Pedido> todosPedidos = new();
+        private ObservableCollection<PedidoModel> _pedidos = new();
 
         [ObservableProperty]
-        private StatusPedidoEnum filtroSelecionado;
+        private ObservableCollection<PedidoModel> _todosPedidos = new();
 
-        public List<StatusPedidoEnum> Filtros { get; } = new List<StatusPedidoEnum>
+        [ObservableProperty]
+        private StatusPedidoEnum _filtroSelecionado;
+
+        public List<StatusPedidoEnum> Filtros { get; } = new()
         {
             StatusPedidoEnum.Todos,
             StatusPedidoEnum.EmAndamento,
@@ -42,96 +45,68 @@ namespace EasyPedidos.ViewModels
             StatusPedidoEnum.Faturado
         };
 
-        partial void OnFiltroSelecionadoChanged(StatusPedidoEnum value)
-        {
-            AplicarFiltro();
-        }
+        partial void OnFiltroSelecionadoChanged(StatusPedidoEnum value) => AplicarFiltro();
 
         [RelayCommand]
         private void CarregarPedidos()
         {
-            if (!todosPedidos.Any())
-            {
-                var list = PedidoViewModel.ObterPedidos();
-                foreach (var item in list)
-                {
-                    todosPedidos.Add(item);
-                }
-                AplicarFiltro();
-            }
+            TodosPedidos.Clear();
+            var pedidos = PedidoViewModel.ObterPedidos();
+            foreach (var p in pedidos) TodosPedidos.Add(p);
+            AplicarFiltro();
         }
 
         private void AplicarFiltro()
         {
-            if (todosPedidos == null || !todosPedidos.Any())
-                return;
-
-            var pedidosFiltrados = FiltroSelecionado switch
+            var filtrados = FiltroSelecionado switch
             {
-                StatusPedidoEnum.EmAndamento => todosPedidos.Where(p => p.Status == StatusPedidoEnum.EmAndamento),
-                StatusPedidoEnum.Pronto => todosPedidos.Where(p => p.Status == StatusPedidoEnum.Pronto),
-                StatusPedidoEnum.Faturado => todosPedidos.Where(p => p.Status == StatusPedidoEnum.Faturado),
-                StatusPedidoEnum.Todos => todosPedidos,
-                _ => todosPedidos.Where(p => p.Status == StatusPedidoEnum.EmAndamento)
+                StatusPedidoEnum.EmAndamento => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.EmAndamento),
+                StatusPedidoEnum.Pronto => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.Pronto),
+                StatusPedidoEnum.Faturado => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.Faturado),
+                StatusPedidoEnum.Todos => TodosPedidos,
+                _ => TodosPedidos
             };
 
-            pedidos.Clear();
-            foreach (var pedido in pedidosFiltrados)
-            {
-                pedidos.Add(pedido);
-            }
+            // FORÇA RECRIAÇÃO DA COLEÇÃO VISÍVEL
+            Pedidos = new ObservableCollection<PedidoModel>(filtrados.OrderByDescending(p => p.DataHora));
 
             Title = $"Pedidos - {FiltroSelecionado.GetDescription()}";
         }
 
         [RelayCommand]
-        private async Task VisualizarPedido(Pedido pedido)
+        private async Task VisualizarPedido(PedidoModel pedido)
         {
             if (pedido == null) return;
-
-            var parameters = new Dictionary<string, object>
+            await Shell.Current.GoToAsync(nameof(DetalhesPedidoPage), new Dictionary<string, object>
             {
                 { "Pedido", pedido }
-            };
-
-            await Shell.Current.GoToAsync(nameof(DetalhesPedidoPage), parameters);
+            });
         }
 
         [RelayCommand]
-        private async Task EditarPedido(Pedido pedido)
+        private async Task FinalizarPedido(PedidoModel pedido)
         {
-            if (pedido == null) return;
-
-            // REGRA: Só permite editar pedidos Em Andamento ou Prontos
-            if (pedido.Status != StatusPedidoEnum.EmAndamento && pedido.Status != StatusPedidoEnum.Pronto)
+            if (pedido?.Status != StatusPedidoEnum.Pronto)
             {
-                await Shell.Current.DisplayAlert(
-                    "Edição Bloqueada",
-                    $"Não é possível editar pedidos com status '{pedido.Status.GetDescription()}'. " +
-                    "Apenas pedidos 'Em Andamento' ou 'Prontos' podem ser editados.",
-                    "OK");
+                await Shell.Current.DisplayAlert("Bloqueado", "Apenas pedidos PRONTOS podem ser finalizados.", "OK");
                 return;
             }
 
-            var parameters = new Dictionary<string, object>
+            await Shell.Current.GoToAsync(nameof(FinalizarPedidoPage), new Dictionary<string, object>
             {
                 { "Pedido", pedido }
-            };
-
-            await Shell.Current.GoToAsync(nameof(EditarPedidoPage), parameters);
+            });
         }
 
         [RelayCommand]
-        private void AtualizarLista()
-        {
-            AplicarFiltro();
-        }
+        private void AtualizarLista() => AplicarFiltro();
+    }
 
-        // Método auxiliar para verificar se pode editar (usado no XAML)
-        public bool PodeEditarPedido(Pedido pedido)
+    public static class ObservableCollectionExtensions
+    {
+        public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> items)
         {
-            return pedido?.Status == StatusPedidoEnum.EmAndamento ||
-                   pedido?.Status == StatusPedidoEnum.Pronto;
+            foreach (var item in items) collection.Add(item);
         }
     }
 }

@@ -1,67 +1,70 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Entidades.entidades;
+using Models;
 using System.Collections.ObjectModel;
 
 namespace EasyPedidos.ViewModels
 {
     public partial class PedidoViewModel : BaseViewModel
     {
+        private static List<PedidoModel> _pedidos = new();
+        private static int _proximoId = 1;
+
         public PedidoViewModel()
         {
             Title = "Novo Pedido";
-            PopularCardapio();
             PopularMesas();
+            PopularCardapio();
+            Pedido = new PedidoModel();
         }
 
-        // Dados em memória
-        private static List<Pedido> _pedidos = new();
-        private static int _proximoId = 1;
+        [ObservableProperty]
+        private PedidoModel _pedido;
 
         [ObservableProperty]
-        private string mesaSelecionada;
-
-        
+        private string _mesaSelecionada;
 
         [ObservableProperty]
-        private ItemCardapio itemSelecionado;
+        private ItemCardapioModel _itemSelecionado;
 
         [ObservableProperty]
-        private int quantidade = 1;
-
-        [ObservableProperty]
-        private decimal totalPedido;
-
+        private int _quantidade = 1;
 
         public ObservableCollection<string> Mesas { get; } = new();
-        public ObservableCollection<ItemCardapio> Cardapio { get; } = new();
-        public ObservableCollection<ItemPedido> ItensPedido { get; } = new();
-
+        public ObservableCollection<ItemCardapioModel> Cardapio { get; } = new();
+        public List<LocalConsumoEnum> LocaisConsumo { get; } = new()
+        {
+            LocalConsumoEnum.NoLocal,
+            LocalConsumoEnum.Retirada,
+            LocalConsumoEnum.Entrega
+        };
         private void PopularMesas()
         {
-            for (int i = 1; i <= 10; i++)
-            {
-                Mesas.Add($"Mesa {i}");
-            }
+            for (int i = 1; i <= 10; i++) Mesas.Add($"Mesa {i}");
         }
 
         private void PopularCardapio()
         {
-            Cardapio.Add(new ItemCardapio { Id = 1, Nome = "X-Burger", Preco = 15.00m });
-            Cardapio.Add(new ItemCardapio { Id = 2, Nome = "X-Bacon", Preco = 18.00m });
-            Cardapio.Add(new ItemCardapio { Id = 3, Nome = "X-Salada", Preco = 16.00m });
-            Cardapio.Add(new ItemCardapio { Id = 4, Nome = "Batata Frita", Preco = 12.00m });
-            Cardapio.Add(new ItemCardapio { Id = 5, Nome = "Refrigerante", Preco = 6.00m });
-            Cardapio.Add(new ItemCardapio { Id = 6, Nome = "Suco", Preco = 8.00m });
+            Cardapio.Add(new ItemCardapioModel { Id = 1, Nome = "X-Burger", Preco = 15.00m });
+            Cardapio.Add(new ItemCardapioModel { Id = 2, Nome = "X-Bacon", Preco = 18.00m });
+            Cardapio.Add(new ItemCardapioModel { Id = 3, Nome = "X-Salada", Preco = 16.00m });
+            Cardapio.Add(new ItemCardapioModel { Id = 4, Nome = "Batata Frita", Preco = 12.00m });
+            Cardapio.Add(new ItemCardapioModel { Id = 5, Nome = "Refrigerante", Preco = 6.00m });
+            Cardapio.Add(new ItemCardapioModel { Id = 6, Nome = "Suco", Preco = 8.00m });
+        }
+
+        partial void OnMesaSelecionadaChanged(string value)
+        {
+            if (Pedido != null) Pedido.Identificador = value;
         }
 
         [RelayCommand]
         private void AdicionarItem()
         {
-            if (ItemSelecionado == null || Quantidade <= 0)
-                return;
+            if (ItemSelecionado == null || Quantidade <= 0 || Pedido == null) return;
 
-            var itemPedido = new ItemPedido
+            var item = new ItemPedidoModel
             {
                 Id = ItemSelecionado.Id,
                 Nome = ItemSelecionado.Nome,
@@ -69,21 +72,15 @@ namespace EasyPedidos.ViewModels
                 Quantidade = Quantidade
             };
 
-            ItensPedido.Add(itemPedido);
-            CalcularTotal();
+            Pedido.Itens.Add(item);
             LimparCamposItem();
         }
 
         [RelayCommand]
-        private void RemoverItem(ItemPedido item)
+        private void RemoverItem(ItemPedidoModel item)
         {
-            ItensPedido.Remove(item);
-            CalcularTotal();
-        }
-
-        private void CalcularTotal()
-        {
-            TotalPedido = ItensPedido.Sum(i => i.Preco * i.Quantidade);
+            if (item != null && Pedido != null)
+                Pedido.Itens.Remove(item);
         }
 
         private void LimparCamposItem()
@@ -95,69 +92,49 @@ namespace EasyPedidos.ViewModels
         [RelayCommand]
         private async Task SalvarPedido()
         {
-            if (string.IsNullOrEmpty(MesaSelecionada))
+            if (string.IsNullOrEmpty(Pedido?.Identificador))
             {
-                await Shell.Current.DisplayAlert("Erro", "Selecione uma mesa", "OK");
+                await Shell.Current.DisplayAlert("Erro", "Selecione uma mesa.", "OK");
+                return;
+            }
+            if (!Pedido.Itens.Any())
+            {
+                await Shell.Current.DisplayAlert("Erro", "Adicione pelo menos um item.", "OK");
                 return;
             }
 
-            if (!ItensPedido.Any())
-            {
-                await Shell.Current.DisplayAlert("Erro", "Adicione itens ao pedido", "OK");
-                return;
-            }
+            Pedido.Id = _proximoId++;
+            Pedido.DataHora = DateTime.Now;
+            Pedido.Status = StatusPedidoEnum.EmAndamento;
 
-            try
-            {
-                IsBusy = true;
+            _pedidos.Add(Pedido);
+            MessagingCenter.Send(this, "PedidoAtualizado", Pedido);
 
-                var pedido = new Pedido
-                {
-                    Id = _proximoId++,
-                    Mesa = MesaSelecionada,
-                    Itens = new List<ItemPedido>(ItensPedido),
-                    Status = StatusPedidoEnum.EmAndamento,
-                    DataHora = DateTime.Now
-                };
+            await Shell.Current.DisplayAlert("Sucesso", $"Pedido #{Pedido.Id} criado!", "OK");
 
-                _pedidos.Add(pedido);
-
-                await Shell.Current.DisplayAlert("Sucesso",
-                    $"Pedido #{pedido.Id} para {MesaSelecionada} criado!\nTotal: R$ {TotalPedido:F2}", "OK");
-
-                // Limpar dados para próximo pedido
-                ItensPedido.Clear();
-                MesaSelecionada = null;
-                TotalPedido = 0;
-
-                await Shell.Current.GoToAsync("..");
-            }
-            catch (Exception ex)
-            {
-                await Shell.Current.DisplayAlert("Erro", ex.Message, "OK");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            // Limpa para novo
+            Pedido = new PedidoModel();
+            await Shell.Current.GoToAsync("..");
         }
 
         [RelayCommand]
         private async Task Cancelar()
         {
-            bool confirmar = await Shell.Current.DisplayAlert(
-                "Confirmar",
-                "Deseja cancelar o pedido?",
-                "Sim", "Não");
-
-            if (confirmar)
-            {
-                await Shell.Current.GoToAsync("..");
-            }
+            bool ok = await Shell.Current.DisplayAlert("Cancelar", "Descartar pedido?", "Sim", "Não");
+            if (ok) await Shell.Current.GoToAsync("..");
         }
 
-        // Método estático para acessar os pedidos de outros ViewModels
-        public static List<Pedido> ObterPedidos() => _pedidos;
-
+        public static List<PedidoModel> ObterPedidos() => _pedidos;
+        public static void AtualizarPedido(PedidoModel pedidoAtualizado)
+        {
+            var existente = _pedidos.FirstOrDefault(p => p.Id == pedidoAtualizado.Id);
+            if (existente != null)
+            {
+                existente.Status = pedidoAtualizado.Status;
+                existente.Itens = pedidoAtualizado.Itens;
+                existente.FormaPagamento = pedidoAtualizado.FormaPagamento;
+                existente.DataFaturamento = pedidoAtualizado.DataFaturamento;
+            }
+        }
     }
 }

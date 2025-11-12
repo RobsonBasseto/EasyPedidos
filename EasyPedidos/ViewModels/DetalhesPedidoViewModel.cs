@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using EasyPedidos.Helpers;
 using EasyPedidos.Pages;
 using Entidades.entidades;
+using Models;
 
 namespace EasyPedidos.ViewModels
 {
-    [QueryProperty(nameof(PedidoSelecionado), "Pedido")]
+    [QueryProperty(nameof(Pedido), "Pedido")]
     public partial class DetalhesPedidoViewModel : BaseViewModel
     {
         public DetalhesPedidoViewModel()
@@ -14,43 +17,42 @@ namespace EasyPedidos.ViewModels
         }
 
         [ObservableProperty]
-        private Pedido pedidoSelecionado;
+        private PedidoModel _pedido;
 
         [RelayCommand]
-        private async Task Voltar()
+        private async Task Voltar() 
         {
-            await Shell.Current.GoToAsync("..");
+            WeakReferenceMessenger.Default.Send(new PedidoAtualizadoMessage(Pedido));
+            await Shell.Current.GoToAsync(".."); 
         }
-         
+
         [RelayCommand]
         private async Task EditarPedido()
         {
-            if (PedidoSelecionado == null) return;
-
-            var parameters = new Dictionary<string, object>
+            if (Pedido == null) return;
+            await Shell.Current.GoToAsync(nameof(EditarPedidoPage), new Dictionary<string, object>
             {
-                { "Pedido", PedidoSelecionado }
-            };
-
-            await Shell.Current.GoToAsync(nameof(EditarPedidoPage), parameters);
+                { "Pedido", Pedido }
+            });
         }
 
         [RelayCommand]
         private async Task ConcluirPedido()
         {
+            if (Pedido == null) return;
+
             bool confirmar = await Shell.Current.DisplayAlert(
-                "Confirmar",
-                "Deseja Concluir o Pedido?",
+                "Concluir Pedido",
+                $"Deseja marcar o pedido da {Pedido.Identificador} como PRONTO?",
                 "Sim", "Não");
 
             if (confirmar)
             {
-                PedidoSelecionado.Status = StatusPedidoEnum.Pronto;
+                Pedido.Status = StatusPedidoEnum.Pronto;
+
+                WeakReferenceMessenger.Default.Send(new PedidoAtualizadoMessage(Pedido));
                 await Shell.Current.GoToAsync("..");
-                MessagingCenter.Send(this, "PedidoAtualizado");
-
             }
-
         }
     }
 }

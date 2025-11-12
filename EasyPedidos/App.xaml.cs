@@ -11,6 +11,7 @@ namespace EasyPedidos
             Routing.RegisterRoute(nameof(EditarPedidoPage), typeof(EditarPedidoPage));
             Routing.RegisterRoute(nameof(PedidoPage), typeof(PedidoPage));
             Routing.RegisterRoute(nameof(ListPedidoPage), typeof(ListPedidoPage));
+            Routing.RegisterRoute(nameof(FinalizarPedidoPage), typeof(FinalizarPedidoPage));
 
             MainPage = new AppShell();
         }
