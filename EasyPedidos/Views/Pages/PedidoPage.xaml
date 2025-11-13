@@ -12,7 +12,6 @@
 
             <!-- CABEÇALHO -->
             <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
-                <Image Source="logo.png" HeightRequest="48" WidthRequest="48" />
                 <Label Text="Novo Pedido" FontSize="26" FontAttributes="Bold" TextColor="#FF6B35" HorizontalOptions="Center" />
             </VerticalStackLayout>
 

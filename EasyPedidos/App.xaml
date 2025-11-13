@@ -34,7 +34,7 @@
                         <VisualStateGroup Name="CheckedStates">
                             <VisualState Name="Checked">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#FF6B35" />
+                                    <Setter Property="BackgroundColor" Value="#FC4C12" />
                                     <Setter Property="TextColor" Value="White" />
                                 </VisualState.Setters>
                             </VisualState>

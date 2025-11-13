@@ -15,21 +15,7 @@
             <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
                 <Image
                     Source="logo.png"
-                    HeightRequest="120"
-                    WidthRequest="120"
                     HorizontalOptions="Center" />
-                <Label
-                    Text="EasyPedidos"
-                    FontSize="32"
-                    FontAttributes="Bold"
-                    TextColor="#FF6B35"
-                    HorizontalOptions="Center" />
-                <Label
-                    Text="Gestão simples, pedidos rápidos."
-                    FontSize="16"
-                    TextColor="#555555"
-                    HorizontalOptions="Center"
-                    Margin="0,5,0,30" />
             </VerticalStackLayout>
 
             <!-- AÇÕES -->
