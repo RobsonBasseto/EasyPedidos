@@ -14,7 +14,7 @@ namespace EasyPedidos.ViewModels
         public ListPedidoViewModel()
         {
             Title = "Pedidos";
-            FiltroSelecionado = StatusPedidoEnum.EmAndamento;
+            FiltroSelecionado = StatusPedidoEnum.EmPreparo;
             CarregarPedidos();
 
             WeakReferenceMessenger.Default.Register<PedidoAtualizadoMessage>(this, (r, m) =>
@@ -40,7 +40,7 @@ namespace EasyPedidos.ViewModels
         public List<StatusPedidoEnum> Filtros { get; } = new()
         {
             StatusPedidoEnum.Todos,
-            StatusPedidoEnum.EmAndamento,
+            StatusPedidoEnum.EmPreparo,
             StatusPedidoEnum.Pronto,
             StatusPedidoEnum.Faturado
         };
@@ -60,7 +60,7 @@ namespace EasyPedidos.ViewModels
         {
             var filtrados = FiltroSelecionado switch
             {
-                StatusPedidoEnum.EmAndamento => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.EmAndamento),
+                StatusPedidoEnum.EmPreparo => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.EmPreparo),
                 StatusPedidoEnum.Pronto => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.Pronto),
                 StatusPedidoEnum.Faturado => TodosPedidos.Where(p => p.Status == StatusPedidoEnum.Faturado),
                 StatusPedidoEnum.Todos => TodosPedidos,

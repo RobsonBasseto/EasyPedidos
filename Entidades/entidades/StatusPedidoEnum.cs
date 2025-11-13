@@ -6,8 +6,8 @@ namespace Entidades.entidades
     {
         [Description("Todos")]
         Todos,
-        [Description("Em Andamento")]
-        EmAndamento,
+        [Description("Em Preparo")]
+        EmPreparo,
         [Description("Pronto")]
         Pronto,
         [Description("Faturado")]

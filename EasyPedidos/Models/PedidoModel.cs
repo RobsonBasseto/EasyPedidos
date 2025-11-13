@@ -16,7 +16,7 @@ namespace Models
         private DateTime _dataHora = DateTime.Now;
 
         [ObservableProperty]
-        private StatusPedidoEnum _status = StatusPedidoEnum.EmAndamento;
+        private StatusPedidoEnum _status = StatusPedidoEnum.EmPreparo;
 
         [ObservableProperty]
         private ObservableCollection<ItemPedidoModel> _itens = new();
@@ -42,7 +42,7 @@ namespace Models
         // Propriedades calculadas (atualizam automaticamente!)
 
         
-        public bool PodeEditar => Status == StatusPedidoEnum.EmAndamento || Status == StatusPedidoEnum.Pronto;
+        public bool PodeEditar => Status == StatusPedidoEnum.EmPreparo || Status == StatusPedidoEnum.Pronto;
 
         
         public bool PodeFinalizar => Status == StatusPedidoEnum.Pronto;
@@ -57,6 +57,16 @@ namespace Models
         public bool MostrarTipoAtendimento => LocalConsumo != LocalConsumoEnum.Entrega;
         
         public string IdentificadorLabel => IsMesa ? "Mesa:" : "Carro:";
+
+        public Color StatusColor => Status switch
+        {
+            StatusPedidoEnum.EmPreparo => Color.FromArgb("#2196F3"),
+            StatusPedidoEnum.Pronto => Color.FromArgb("#4CAF50"),
+            StatusPedidoEnum.Faturado => Color.FromArgb("#9E9E9E"),
+            StatusPedidoEnum.Cancelado => Color.FromArgb("#FF5722"),
+            _ => Color.FromArgb("#666666")
+        };
+
         partial void OnIsMesaChanged(bool value)
         {
             // Quando mudar o tipo de atendimento

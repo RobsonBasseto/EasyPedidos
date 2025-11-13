@@ -1,56 +1,179 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             xmlns:syncfusionButtons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:local="clr-namespace:EasyPedidos.Pages"
              xmlns:helpers="clr-namespace:EasyPedidos.Helpers"
              x:Class="EasyPedidos.Pages.ListPedidoPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="#FFFFFF">
+
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
-            <Frame BackgroundColor="SlateGray" Padding="15">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Filtrar Pedidos:" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" />
-                    <Picker Title="Selecione o Filtro" ItemsSource="{Binding Filtros}" SelectedItem="{Binding FiltroSelecionado}" HorizontalOptions="FillAndExpand">
-                        <!--<Picker.ItemDisplayBinding>
-                            <Binding Converter="{x:Static helpers:EnumToDescriptionConverter.Instance}" />
-                        </Picker.ItemDisplayBinding>-->
-                    </Picker>
-                    <Button Text="Atualizar Lista" Command="{Binding AtualizarListaCommand}" BackgroundColor="#2196F3" TextColor="White" HorizontalOptions="FillAndExpand" />
+        <VerticalStackLayout Padding="20,35,20,25" Spacing="22">
+
+            <!-- CABEÇALHO -->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Label Text="Pedidos em Andamento" 
+                       FontSize="26" 
+                       FontAttributes="Bold" 
+                       TextColor="#FF6B35" 
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- FILTROS -->
+            <Frame BackgroundColor="#FFFFFF" CornerRadius="18" Padding="18" BorderColor="#EEEEEE" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Filtrar Pedidos" 
+                           FontSize="17" 
+                           FontAttributes="Bold" 
+                           TextColor="#FF6B35" />
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <!-- COMBOBOX FILTRO -->
+                        <Frame Grid.Column="0" BackgroundColor="#F9F9F9" CornerRadius="14" Padding="0" BorderColor="#DDDDDD" HasShadow="False">
+                            <syncfusion:SfComboBox
+                                ItemsSource="{Binding Filtros}"
+                                SelectedItem="{Binding FiltroSelecionado}"
+                                Placeholder="Selecione o filtro..."
+                                TextColor="#333333"
+                                FontSize="15"
+                                Background="#F9F9F9"
+                                Margin="14,10"
+                                HeightRequest="48" />
+                        </Frame>
+
+                        <!-- BOTÃO ATUALIZAR -->
+                        <syncfusionButtons:SfButton
+                            Grid.Column="1"
+                            Text="🔍"
+                            Command="{Binding AtualizarListaCommand}"
+                            Background="#FF6B35"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="14"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            HorizontalOptions="End" />
+                    </Grid>
+
+                    <!-- CONTADOR DE PEDIDOS -->
+                    <Frame BackgroundColor="#FFF8F5" CornerRadius="12" Padding="12" BorderColor="#FFE0D6" HasShadow="False">
+                        <Label Text="{Binding Pedidos.Count, StringFormat='{0} pedido(s) encontrado(s)'}" 
+                               FontSize="14" 
+                               FontAttributes="Bold" 
+                               TextColor="#FF6B35"
+                               HorizontalOptions="Center" />
+                    </Frame>
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame BackgroundColor="SlateGray" Padding="10">
-                <Label Text="{Binding Pedidos.Count, StringFormat='{0} pedido(s) encontrado(s)'}" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" />
-            </Frame>
-
+            <!-- LISTA DE PEDIDOS -->
             <CollectionView ItemsSource="{Binding Pedidos}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="15" Padding="40">
+                        <Label Text="📝" 
+                               FontSize="40" 
+                               HorizontalOptions="Center" />
+                        <Label Text="Nenhum pedido encontrado" 
+                               FontSize="16" 
+                               TextColor="#666" 
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Quando houver pedidos, eles aparecerão aqui." 
+                               FontSize="14" 
+                               TextColor="#999" 
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame BackgroundColor="SlateGray" Padding="15" Margin="0,5">
+                        <Frame BackgroundColor="#FFFFFF" 
+                               CornerRadius="16" 
+                               Padding="18" 
+                               Margin="0,6" 
+                               HasShadow="True">
+                            <Frame.Shadow>
+                                <Shadow Brush="#10000000" Offset="0,2" Radius="6" />
+                            </Frame.Shadow>
+
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.VisualizarPedidoCommand}"
-                                                      CommandParameter="{Binding .}"/>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.VisualizarPedidoCommand}"
+                                    CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
-                            <VerticalStackLayout Spacing="8">
-                                <Grid ColumnDefinitions="*, Auto">
-                                    <Label Text="{Binding Identificador}" FontSize="18" FontAttributes="Bold" TextColor="White" Grid.Column="0"/>
-                                    <HorizontalStackLayout Spacing="5" Grid.Column="1">
-                                        <Label Text="🕒" FontSize="10"/>
-                                        <Label Text="{Binding DataHora, StringFormat='{0:HH:mm}'}" FontSize="12" TextColor="LightGray"/>
+
+                            <VerticalStackLayout Spacing="12">
+                                <!-- CABEÇALHO DO PEDIDO -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                        <Label Text="{Binding Identificador}" 
+                                               FontSize="18" 
+                                               FontAttributes="Bold" 
+                                               TextColor="#333" />
+                                        <Label Text="{Binding LocalConsumoDescricao}" 
+                                               FontSize="12" 
+                                               TextColor="#666" />
+                                    </VerticalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Start">
+                                        <Label Text="🕒" FontSize="12"/>
+                                        <Label Text="{Binding DataHora, StringFormat='{0:HH\\:mm}'}" 
+                                               FontSize="12" 
+                                               TextColor="#666"
+                                               FontAttributes="Bold" />
                                     </HorizontalStackLayout>
                                 </Grid>
-                                <Label Text="{Binding ItensResumido}" FontSize="14" TextColor="White"/>
-                                <Label Text="{Binding StatusDescricao}" FontSize="12" TextColor="White"/>
-                                <Button Text="Finalizar Pedido"
+
+                                <!-- ITENS DO PEDIDO -->
+                                <Frame BackgroundColor="#F9F9F9" CornerRadius="10" Padding="12" HasShadow="False">
+                                    <Label Text="{Binding ItensResumido}" 
+                                           FontSize="14" 
+                                           TextColor="#555"
+                                           LineBreakMode="WordWrap" />
+                                </Frame>
+
+                                <!-- STATUS E AÇÕES -->
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <!-- STATUS -->
+                                    <Frame Grid.Column="0" 
+                                           BackgroundColor="{Binding StatusColor}" 
+                                           CornerRadius="8" 
+                                           Padding="8,4" 
+                                           HasShadow="False"
+                                           HorizontalOptions="Start">
+                                        <Label Text="{Binding StatusDescricao}" 
+                                               FontSize="12" 
+                                               FontAttributes="Bold" 
+                                               TextColor="White"
+                                               HorizontalOptions="Center" />
+                                    </Frame>
+
+                                    <!-- BOTÃO FINALIZAR -->
+                                    <syncfusionButtons:SfButton
+                                        Grid.Column="1"
+                                        Text="Finalizar"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.FinalizarPedidoCommand}"
                                         CommandParameter="{Binding .}"
-                                        BackgroundColor="#FF5722" TextColor="White" FontSize="16" FontAttributes="Bold"
-                                        HorizontalOptions="Fill" IsVisible="{Binding PodeFinalizar}"/>
+                                        Background="#4CAF50"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        FontSize="13"
+                                        CornerRadius="10"
+                                        HeightRequest="36"
+                                        Padding="12,0"
+                                        HorizontalOptions="End"
+                                        IsVisible="{Binding PodeFinalizar}" />
+                                </Grid>
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

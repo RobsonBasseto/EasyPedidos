@@ -106,7 +106,7 @@ namespace EasyPedidos.ViewModels
 
             Pedido.Id = _proximoId++;
             Pedido.DataHora = DateTime.Now;
-            Pedido.Status = StatusPedidoEnum.EmAndamento;
+            Pedido.Status = StatusPedidoEnum.EmPreparo;
 
             _pedidos.Add(Pedido);
             MessagingCenter.Send(this, "PedidoAtualizado", Pedido);
