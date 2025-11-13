@@ -149,76 +149,19 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 2. LOCAL DE CONSUMO -->
-            <!-- 2. LOCAL DE CONSUMO -->
             <Frame BackgroundColor="#FFFFFF" CornerRadius="18" Padding="18" BorderColor="#EEEEEE" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="2. Onde vai consumir?" FontSize="17" FontAttributes="Bold" TextColor="#FF6B35" />
-
-                    <!-- 3 OPÇÕES EM GRID (EXCLUSIVO VIA BINDING) -->
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <!-- NO LOCAL -->
-                        <Frame
-                Grid.Column="0"
-                BackgroundColor="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolDescConverter}, ConverterParameter=NoLocal|#FFF0E6|#F9F9F9}"
-                CornerRadius="16"
-                Padding="0"
-                BorderColor="#DDDDDD"
-                HasShadow="False"
-                HorizontalOptions="Fill">
-                            <syncfusionButtons:SfRadioButton
-                    Text="No Local"
-                    IsChecked="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolDescConverter}, ConverterParameter=NoLocal}"
-                    TextColor="#333"
-                    FontSize="13"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    HeightRequest="48"
-                    Padding="10,0" />
-                        </Frame>
-
-                        <!-- RETIRADA -->
-                        <Frame
-                Grid.Column="1"
-                BackgroundColor="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolDescConverter}, ConverterParameter=Retirada|#FFF0E6|#F9F9F9}"
-                CornerRadius="16"
-                Padding="0"
-                BorderColor="#DDDDDD"
-                HasShadow="False"
-                HorizontalOptions="Fill">
-                            <syncfusionButtons:SfRadioButton
-                    Text="Retirada"
-                    IsChecked="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolDescConverter}, ConverterParameter=Retirada}"
-                    TextColor="#333"
-                    FontSize="13"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    HeightRequest="48"
-                    Padding="10,0" />
-                        </Frame>
-
-                        <!-- ENTREGA -->
-                        <Frame
-                Grid.Column="2"
-                BackgroundColor="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolDescConverter}, ConverterParameter=Entrega|#FFF0E6|#F9F9F9}"
-                CornerRadius="16"
-                Padding="0"
-                BorderColor="#DDDDDD"
-                HasShadow="False"
-                HorizontalOptions="Fill">
-                            <syncfusionButtons:SfRadioButton
-                    Text="Entrega"
-                    IsChecked="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolDescConverter}, ConverterParameter=Entrega}"
-                    TextColor="#333"
-                    FontSize="13"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    HeightRequest="48"
-                    Padding="10,0" />
-                        </Frame>
+                        <RadioButton Content="No Local"    GroupName="LocalConsumo" 
+                                     IsChecked="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=NoLocal, Mode=TwoWay}"
+                                     Style="{StaticResource CardRadioButtonStyle}" />
+                        <RadioButton Content="Retirada"    GroupName="LocalConsumo" 
+                                     IsChecked="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Retirada, Mode=TwoWay}"
+                                     Style="{StaticResource CardRadioButtonStyle}" Grid.Column="1" />
+                        <RadioButton Content="Entrega"     GroupName="LocalConsumo" 
+                                     IsChecked="{Binding Pedido.LocalConsumo, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Entrega, Mode=TwoWay}"
+                                     Style="{StaticResource CardRadioButtonStyle}" Grid.Column="2" />
                     </Grid>
                 </VerticalStackLayout>
             </Frame>
@@ -227,15 +170,12 @@
             <Frame IsVisible="{Binding Pedido.MostrarTipoAtendimento}" BackgroundColor="#FFFFFF" CornerRadius="18" Padding="18" BorderColor="#EEEEEE" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="3. Mesa ou Carro?" FontSize="17" FontAttributes="Bold" TextColor="#FF6B35" />
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
-                        <!-- MESA -->
-                        <Frame BackgroundColor="{Binding Pedido.IsMesa, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#FFF0E6|#F9F9F9}" CornerRadius="14" Padding="12" BorderColor="#DDDDDD" HasShadow="False" Grid.Column="0">
-                            <syncfusionButtons:SfRadioButton Text="Mesa" IsChecked="{Binding Pedido.IsMesa}" />
-                        </Frame>
-                        <!-- CARRO -->
-                        <Frame BackgroundColor="{Binding Pedido.IsMesa, Converter={StaticResource InverseBoolToColorConverter}, ConverterParameter=#FFF0E6|#F9F9F9}" CornerRadius="14" Padding="12" BorderColor="#DDDDDD" HasShadow="False" Grid.Column="1">
-                            <syncfusionButtons:SfRadioButton Text="Carro" IsChecked="{Binding Pedido.IsMesa, Converter={StaticResource InverseBooleanConverter}}" />
-                        </Frame>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <RadioButton Content="Mesa"  GroupName="TipoAtendimento" IsChecked="{Binding Pedido.IsMesa, Mode=TwoWay}" 
+                                     Style="{StaticResource CardRadioButtonStyle}" />
+                        <RadioButton Content="Carro" GroupName="TipoAtendimento" 
+                                     IsChecked="{Binding Pedido.IsMesa, Converter={StaticResource InverseBooleanConverter}, Mode=TwoWay}"
+                                     Style="{StaticResource CardRadioButtonStyle}" Grid.Column="1" />
                     </Grid>
 
                     <!-- MESA -->
@@ -255,14 +195,12 @@
 
                     <!-- CARRO -->
                     <VerticalStackLayout IsVisible="{Binding Pedido.IsMesa, Converter={StaticResource InverseBooleanConverter}}" Spacing="8" Margin="0,10,0,0">
-                        <Label Text="Placa do Carro:" FontSize="14" TextColor="#555" />
+                        <Label Text="Veiculo:" FontSize="14" TextColor="#555" />
                         <Frame BackgroundColor="#F9F9F9" CornerRadius="14" Padding="0" BorderColor="#DDDDDD" HasShadow="False">
                             <Entry
                                 Text="{Binding Pedido.Identificador}"
-                                Placeholder="ABC-1234"
                                 TextColor="#333333"
                                 FontSize="15"
-                                MaxLength="8"
                                 Margin="14,10"
                                 HeightRequest="48" />
                         </Frame>

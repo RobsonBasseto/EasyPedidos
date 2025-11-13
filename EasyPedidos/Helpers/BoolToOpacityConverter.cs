@@ -1,11 +1,11 @@
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace EasyPedidos.Helpers
 {
-    public class BoolToColorConverter : IValueConverter
+    public class BoolToOpacityConverter : IValueConverter
     {
         public object Convert(object value, Type t, object p, CultureInfo c)
-            => (bool)value ? Colors.White : Color.FromArgb("#333333");
+            => (bool)value ? 1.0 : 0.0;
 
         public object ConvertBack(object value, Type t, object p, CultureInfo c) => throw new NotImplementedException();
     }
