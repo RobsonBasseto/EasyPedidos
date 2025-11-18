@@ -23,11 +23,6 @@ namespace EasyPedidos.ViewModels
             });
         }
 
-        ~ListPedidoViewModel()
-        {
-            MessagingCenter.Unsubscribe<object, PedidoModel>(this, "PedidoAtualizado");
-        }
-
         [ObservableProperty]
         private ObservableCollection<PedidoModel> _pedidos = new();
 
@@ -50,10 +45,18 @@ namespace EasyPedidos.ViewModels
         [RelayCommand]
         private void CarregarPedidos()
         {
-            TodosPedidos.Clear();
-            var pedidos = PedidoViewModel.ObterPedidos();
-            foreach (var p in pedidos) TodosPedidos.Add(p);
-            AplicarFiltro();
+            try
+            {
+                IsBusy = true;
+                TodosPedidos.Clear();
+                var pedidos = PedidoViewModel.ObterPedidos();
+                foreach (var p in pedidos) TodosPedidos.Add(p);
+                AplicarFiltro();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private void AplicarFiltro()
@@ -67,9 +70,7 @@ namespace EasyPedidos.ViewModels
                 _ => TodosPedidos
             };
 
-            // FORÇA RECRIAÇÃO DA COLEÇÃO VISÍVEL
             Pedidos = new ObservableCollection<PedidoModel>(filtrados.OrderByDescending(p => p.DataHora));
-
             Title = $"Pedidos - {FiltroSelecionado.GetDescription()}";
         }
 
@@ -99,14 +100,6 @@ namespace EasyPedidos.ViewModels
         }
 
         [RelayCommand]
-        private void AtualizarLista() => AplicarFiltro();
-    }
-
-    public static class ObservableCollectionExtensions
-    {
-        public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> items)
-        {
-            foreach (var item in items) collection.Add(item);
-        }
+        private void AtualizarLista() => CarregarPedidos();
     }
 }
