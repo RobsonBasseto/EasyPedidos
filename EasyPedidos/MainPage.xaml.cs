@@ -1,4 +1,5 @@
 ﻿using EasyPedidos.Pages;
+using EasyPedidos.ViewModels;
 
 namespace EasyPedidos
 {
@@ -20,7 +21,7 @@ namespace EasyPedidos
         private async void OnListarPedidosClicked(object sender, EventArgs e)
         {
             // Navega para a tela de listar pedidos
-            await Navigation.PushAsync(new ListPedidoPage());
+            await Navigation.PushAsync(new ListPedidoPage(new ListPedidoViewModel()));
         }
 
     }
