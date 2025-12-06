@@ -8,6 +8,7 @@
              xmlns:helpers="clr-namespace:EasyPedidos.Helpers"
              x:Class="EasyPedidos.Pages.ListPedidoPage"
              Title="{Binding Title}"
+             x:Name="PageRoot"
              BackgroundColor="#FFFFFF">
 
     <Grid RowDefinitions="Auto,*">
@@ -116,14 +117,12 @@
                                Padding="18" 
                                Margin="10,6"
                                HasShadow="True">
-                            <Frame.Shadow>
-                                <Shadow Brush="#10000000" Offset="0,2" Radius="6" />
-                            </Frame.Shadow>
+
 
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:ListPedidoPage}}, Path=BindingContext.VisualizarPedidoCommand}"
-                                    CommandParameter="{Binding .}"/>
+                     Command="{Binding Source={x:Reference Name=PageRoot}, Path=VisualizarPedidoFromPageCommand}"
+                     CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
 
                             <VerticalStackLayout Spacing="12">

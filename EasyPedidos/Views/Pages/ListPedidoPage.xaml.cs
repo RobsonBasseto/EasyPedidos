@@ -1,14 +1,24 @@
 ﻿using EasyPedidos.ViewModels;
+using Models;
+using System.Windows.Input;
 
 namespace EasyPedidos.Pages
 {
     public partial class ListPedidoPage : ContentPage
     {
+        public ICommand VisualizarPedidoFromPageCommand { get; }
         public ListPedidoPage(ListPedidoViewModel viewModel)
         {
             InitializeComponent();
             BindingContext = viewModel;
-            
+
+            VisualizarPedidoFromPageCommand = new Command<PedidoModel>(async (pedido) =>
+            {
+                if (BindingContext is ListPedidoViewModel vm)
+                {
+                    await vm.VisualizarPedidoCommand.ExecuteAsync(pedido);
+                }
+            });
             // Monitorar mudanças no IsBusy
             if (viewModel != null)
             {

@@ -20,7 +20,7 @@ namespace EasyPedidos
                 });
 
             // SYNC FUSION LICENÇA (MESMO FREE)
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF1cX2hIf0x3THxbf1x1ZFBMZFlbRnJPIiBoS35Rc0RiWH1fd3BQRGRbU0ZwVEFc");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH1edHRcQ2ZfU0RwWkVWYEg=");
 
             // REGISTRO DE VIEWMODELS E PAGES
             builder.Services.AddTransient<PedidoViewModel>();
