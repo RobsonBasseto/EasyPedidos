@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:easy_pedidos_flutter/models/enums/local_consumo_enum.dart';
 import 'package:easy_pedidos_flutter/models/enums/status_pedido_enum.dart';
 import 'package:easy_pedidos_flutter/models/item_pedido_model.dart';
@@ -5,6 +6,10 @@ import 'package:easy_pedidos_flutter/models/pedido_model.dart';
 
 class PedidoService {
   final List<PedidoModel> _pedidos = [];
+
+  // Stream to notify about updates
+  final _updatesController = StreamController<int>.broadcast();
+  Stream<int> get onPedidoUpdated => _updatesController.stream;
 
   PedidoService() {
     _populateMockData();
@@ -77,15 +82,38 @@ class PedidoService {
   }
 
   Future<List<PedidoModel>> getPedidos() async {
-    // Simulando delay de rede
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 500));
     return List.from(_pedidos);
   }
 
+  Future<PedidoModel?> getPedidoById(int id) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    try {
+      return _pedidos.firstWhere((p) => p.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> savePedido(PedidoModel pedido) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    // Simple auto-increment for mock
+    final newId = _pedidos.isEmpty ? 1 : _pedidos.map((p) => p.id).reduce((a, b) => a > b ? a : b) + 1;
+    final newPedido = pedido.copyWith(id: newId, dataHora: DateTime.now());
+    _pedidos.add(newPedido);
+    _updatesController.add(newId);
+  }
+
   Future<void> updatePedido(PedidoModel pedido) async {
+    await Future.delayed(const Duration(milliseconds: 500));
     final index = _pedidos.indexWhere((p) => p.id == pedido.id);
     if (index != -1) {
       _pedidos[index] = pedido;
+      _updatesController.add(pedido.id);
     }
+  }
+
+  void dispose() {
+    _updatesController.close();
   }
 }

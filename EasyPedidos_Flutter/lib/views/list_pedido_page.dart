@@ -63,6 +63,11 @@ class ListPedidoPage extends StatelessWidget {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/novo-pedido'),
+        backgroundColor: AppTheme.primaryOrange,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
     );
   }
 
@@ -76,14 +81,14 @@ class ListPedidoPage extends StatelessWidget {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
       itemCount: viewModel.pedidos.length,
       itemBuilder: (context, index) {
         final pedido = viewModel.pedidos[index];
         return PedidoCard(
           pedido: pedido,
-          onTap: () => context.push('/detalhes', extra: pedido),
-          onFinalizar: () => context.push('/finalizar', extra: pedido),
+          onTap: () => context.push('/detalhes/${pedido.id}'),
+          onFinalizar: () => context.push('/finalizar/${pedido.id}'),
         );
       },
     );

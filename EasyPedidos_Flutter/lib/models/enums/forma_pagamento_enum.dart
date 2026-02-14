@@ -2,7 +2,8 @@ enum FormaPagamentoEnum {
   dinheiro,
   cartaoCredito,
   cartaoDebito,
-  pix;
+  pix,
+  outros;
 
   String get description {
     switch (this) {
@@ -13,7 +14,9 @@ enum FormaPagamentoEnum {
       case FormaPagamentoEnum.cartaoDebito:
         return 'Cartão de Débito';
       case FormaPagamentoEnum.pix:
-        return 'Pix';
+        return 'PIX';
+      case FormaPagamentoEnum.outros:
+        return 'Outros';
     }
   }
 }

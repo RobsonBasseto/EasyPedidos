@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:easy_pedidos_flutter/models/enums/status_pedido_enum.dart';
 import 'package:easy_pedidos_flutter/models/pedido_model.dart';
@@ -6,11 +7,17 @@ import 'package:easy_pedidos_flutter/viewmodels/base_viewmodel.dart';
 
 class ListPedidoViewModel extends BaseViewModel {
   final PedidoService _pedidoService;
+  StreamSubscription? _subscription;
 
   ListPedidoViewModel(this._pedidoService) {
     title = 'Pedidos';
     _filtroSelecionado = StatusPedidoEnum.emPreparo;
     carregarPedidos(silencioso: true);
+
+    // Listen for updates
+    _subscription = _pedidoService.onPedidoUpdated.listen((_) {
+      carregarPedidos(silencioso: true);
+    });
   }
 
   List<PedidoModel> _pedidos = [];
@@ -38,11 +45,6 @@ class ListPedidoViewModel extends BaseViewModel {
     if (!silencioso) isBusy = true;
 
     try {
-      if (!silencioso) {
-        // Pequeno delay para mostrar o feedback visual se não for silencioso
-        await Future.delayed(const Duration(seconds: 1));
-      }
-
       final result = await _pedidoService.getPedidos();
       _todosPedidos = result;
       _aplicarFiltro();
@@ -79,12 +81,9 @@ class ListPedidoViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> finalizarPedido(PedidoModel pedido) async {
-    if (pedido.status != StatusPedidoEnum.pronto) {
-      return;
-    }
-
-    // Lógica para finalizar (iria para a página de finalização)
-    // Para simplificar no ViewModel, vamos apenas expor a navegação no View
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }

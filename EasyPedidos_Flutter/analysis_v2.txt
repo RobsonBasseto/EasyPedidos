@@ -1,0 +1,43 @@
+Analyzing lib...
+
+   info • Parameter 'key' could be a super parameter • lib/app.dart:19:9 • use_super_parameters
+  error • Expected an identifier • lib/models/produto_model.dart:16:38 • missing_identifier
+   info • The private field _itens could be 'final' • lib/viewmodels/pedido_viewmodel.dart:22:25 • prefer_final_fields
+   info • Parameter 'key' could be a super parameter • lib/views/detalhes_pedido_page.dart:15:9 • use_super_parameters
+   info • Parameter 'key' could be a super parameter • lib/views/editar_pedido_page.dart:13:9 • use_super_parameters
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/views/editar_pedido_page.dart:89:25 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/views/editar_pedido_page.dart:119:31 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/editar_pedido_page.dart:228:50 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/editar_pedido_page.dart:231:29 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/editar_pedido_page.dart:233:50 • use_build_context_synchronously
+   info • Parameter 'key' could be a super parameter • lib/views/finalizar_pedido_page.dart:12:9 • use_super_parameters
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/views/finalizar_pedido_page.dart:80:25 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/views/finalizar_pedido_page.dart:81:25 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/finalizar_pedido_page.dart:153:56 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/finalizar_pedido_page.dart:156:35 • use_build_context_synchronously
+   info • Parameter 'key' could be a super parameter • lib/views/list_pedido_page.dart:13:9 • use_super_parameters
+   info • Parameter 'key' could be a super parameter • lib/views/pedido_page.dart:10:9 • use_super_parameters
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/views/pedido_page.dart:53:31 • deprecated_member_use
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/views/pedido_page.dart:195:33 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/views/pedido_page.dart:196:33 • deprecated_member_use
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/views/pedido_page.dart:203:33 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/views/pedido_page.dart:204:33 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/pedido_page.dart:241:50 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/pedido_page.dart:244:29 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/views/pedido_page.dart:246:50 • use_build_context_synchronously
+  error • Expected to find ')' • lib/views/pedido_page.dart:261:14 • expected_token
+  error • Expected to find ';' • lib/views/pedido_page.dart:264:7 • expected_token
+warning • Dead code • lib/views/pedido_page.dart:264:8 • dead_code
+  error • Expected an identifier • lib/views/pedido_page.dart:264:8 • missing_identifier
+  error • Expected to find ';' • lib/views/pedido_page.dart:264:8 • expected_token
+  error • Unexpected text ';' • lib/views/pedido_page.dart:264:8 • unexpected_token
+  error • Expected an identifier • lib/views/pedido_page.dart:265:5 • missing_identifier
+  error • Unexpected text ';' • lib/views/pedido_page.dart:265:5 • unexpected_token
+   info • Unnecessary empty statement • lib/views/pedido_page.dart:265:6 • empty_statements
+   info • Parameter 'key' could be a super parameter • lib/widgets/empty_state.dart:5:9 • use_super_parameters
+   info • Parameter 'key' could be a super parameter • lib/widgets/filter_section.dart:11:9 • use_super_parameters
+   info • Parameter 'key' could be a super parameter • lib/widgets/loading_state.dart:5:9 • use_super_parameters
+   info • Parameter 'key' could be a super parameter • lib/widgets/pedido_card.dart:12:9 • use_super_parameters
+   info • Parameter 'key' could be a super parameter • lib/widgets/status_badge.dart:7:9 • use_super_parameters
+
+39 issues found. (ran in 1.6s)
