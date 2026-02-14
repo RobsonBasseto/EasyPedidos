@@ -23,7 +23,7 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryOrange,
         primary: primaryOrange,
-        background: background,
+        surface: background,
       ),
       scaffoldBackgroundColor: background,
       textTheme: GoogleFonts.openSansTextTheme().copyWith(
