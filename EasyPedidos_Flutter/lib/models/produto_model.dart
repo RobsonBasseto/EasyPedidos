@@ -17,7 +17,7 @@ class ProdutoModel {
     this.ingredientesDisponiveis = const [],
   });
 
-  String get descricao => '$nome - R$ ${preco.toStringAsFixed(2)}';
+  String get descricao => '''$nome - R\$ ${preco.toStringAsFixed(2)}''';
 
   factory ProdutoModel.fromJson(Map<String, dynamic> json) {
     return ProdutoModel(

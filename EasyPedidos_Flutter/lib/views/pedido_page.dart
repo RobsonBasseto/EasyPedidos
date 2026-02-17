@@ -323,12 +323,13 @@ class _PedidoPageState extends State<PedidoPage> {
                   ],
                 ),
               ],
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
+
 
   Widget _buildSectionCard({required String title, required Widget child}) {
     return Container(
