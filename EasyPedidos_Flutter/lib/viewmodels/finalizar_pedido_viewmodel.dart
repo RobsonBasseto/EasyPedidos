@@ -9,14 +9,12 @@ class FinalizarPedidoViewModel extends BaseViewModel {
   PedidoModel? _pedido;
   FormaPagamentoEnum? _formaPagamento;
   String _valorRecebidoString = '';
-  bool _imprimirVia = false;
 
   FinalizarPedidoViewModel(this._pedidoService);
 
   PedidoModel? get pedido => _pedido;
   FormaPagamentoEnum? get formaPagamento => _formaPagamento;
   String get valorRecebidoString => _valorRecebidoString;
-  bool get imprimirVia => _imprimirVia;
 
   set formaPagamento(FormaPagamentoEnum? value) {
     _formaPagamento = value;
@@ -25,11 +23,6 @@ class FinalizarPedidoViewModel extends BaseViewModel {
 
   set valorRecebidoString(String value) {
     _valorRecebidoString = value;
-    notifyListeners();
-  }
-
-  set imprimirVia(bool value) {
-    _imprimirVia = value;
     notifyListeners();
   }
 

@@ -1,0 +1,45 @@
+/* Custom Styles */
+:root {
+    --primary-orange: #FF6B35;
+    --primary-orange-hover: #E85A24;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.bg-orange-primary {
+    background-color: var(--primary-orange);
+}
+
+.text-orange-primary {
+    color: var(--primary-orange);
+}
+
+/* Scrollbar styling */
+#ingredientesList::-webkit-scrollbar {
+    width: 6px;
+}
+
+#ingredientesList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#ingredientesList::-webkit-scrollbar-thumb {
+    background: var(--primary-orange);
+    border-radius: 3px;
+}
+
+#ingredientesList::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-orange-hover);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}

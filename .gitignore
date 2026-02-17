@@ -67,3 +67,7 @@ packages/
 *.zip
 *.7z
 *.rar
+
+## Node.js
+node_modules/
+*.log

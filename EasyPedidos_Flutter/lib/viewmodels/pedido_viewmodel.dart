@@ -43,13 +43,14 @@ class PedidoViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void adicionarItem(ProdutoModel produto, int qtd, String? obs) {
+  void adicionarItem(ProdutoModel produto, int qtd, String? obs, [List<String>? ingredientes]) {
     final novoItem = ItemPedidoModel(
-      id: int.parse(produto.id),
+      id: int.tryParse(produto.id) ?? DateTime.now().millisecondsSinceEpoch,
       nome: produto.nome,
       preco: produto.preco,
       quantidade: qtd,
       observacao: obs ?? '',
+      ingredientes: ingredientes ?? produto.ingredientes,
     );
     _itens.add(novoItem);
     notifyListeners();

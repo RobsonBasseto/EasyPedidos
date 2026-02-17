@@ -156,21 +156,6 @@ class _DetalhesPedidoPageState extends State<DetalhesPedidoPage> {
                     ],
                   ),
 
-                if (pedido.status == StatusPedidoEnum.faturado)
-                   Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Imprimindo comprovante...'))
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.statusFaturado,
-                        minimumSize: const Size(200, 54),
-                      ),
-                      child: const Text('Imprimir'),
-                    ),
-                  ),
               ],
             ),
           );

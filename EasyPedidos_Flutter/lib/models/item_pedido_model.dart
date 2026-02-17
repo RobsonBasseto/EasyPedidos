@@ -6,6 +6,7 @@ class ItemPedidoModel extends Equatable {
   final double preco;
   final int quantidade;
   final String observacao;
+  final List<String> ingredientes;
 
   const ItemPedidoModel({
     required this.id,
@@ -13,15 +14,24 @@ class ItemPedidoModel extends Equatable {
     required this.preco,
     this.quantidade = 1,
     this.observacao = '',
+    this.ingredientes = const [],
   });
 
   double get subtotal => preco * quantidade;
 
-  String get resumo =>
-      '${quantidade}x $nome ${observacao.isEmpty ? "" : "($observacao)"}';
+  String get resumo {
+    String res = '${quantidade}x $nome';
+    if (ingredientes.isNotEmpty) {
+      res += ' (Com: ${ingredientes.join(", ")})';
+    }
+    if (observacao.isNotEmpty) {
+      res += ' [Obs: $observacao]';
+    }
+    return res;
+  }
 
   @override
-  List<Object?> get props => [id, nome, preco, quantidade, observacao];
+  List<Object?> get props => [id, nome, preco, quantidade, observacao, ingredientes];
 
   ItemPedidoModel copyWith({
     int? id,
@@ -29,6 +39,7 @@ class ItemPedidoModel extends Equatable {
     double? preco,
     int? quantidade,
     String? observacao,
+    List<String>? ingredientes,
   }) {
     return ItemPedidoModel(
       id: id ?? this.id,
@@ -36,6 +47,7 @@ class ItemPedidoModel extends Equatable {
       preco: preco ?? this.preco,
       quantidade: quantidade ?? this.quantidade,
       observacao: observacao ?? this.observacao,
+      ingredientes: ingredientes ?? this.ingredientes,
     );
   }
 }

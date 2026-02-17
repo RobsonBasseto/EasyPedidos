@@ -121,13 +121,6 @@ class _FinalizarPedidoPageState extends State<FinalizarPedidoPage> {
                   ),
                 const SizedBox(height: 20),
 
-                // OPÇÕES
-                CheckboxListTile(
-                  title: const Text('Imprimir via do cliente'),
-                  value: viewModel.imprimirVia,
-                  onChanged: (value) => viewModel.imprimirVia = value ?? false,
-                  activeColor: AppTheme.primaryOrange,
-                ),
                 const SizedBox(height: 30),
 
                 // BOTÕES
