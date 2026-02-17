@@ -26,6 +26,67 @@ class _PedidoPageState extends State<PedidoPage> {
     super.dispose();
   }
 
+  void _showCustomizacaoModal(BuildContext context, PedidoViewModel viewModel, ProdutoModel produto) {
+    List<String> ingredientesSelecionados = List.from(produto.ingredientes);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateModal) {
+            return AlertDialog(
+              title: Text('Customizar ${produto.nome}'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: produto.ingredientesDisponiveis.map((ingrediente) {
+                    final bool isOriginal = produto.ingredientes.contains(ingrediente);
+                    return CheckboxListTile(
+                      title: Text(ingrediente),
+                      subtitle: isOriginal ? null : const Text('Adicional', style: TextStyle(fontSize: 12)),
+                      value: ingredientesSelecionados.contains(ingrediente),
+                      onChanged: (bool? value) {
+                        setStateModal(() {
+                          if (value == true) {
+                            ingredientesSelecionados.add(ingrediente);
+                          } else {
+                            ingredientesSelecionados.remove(ingrediente);
+                          }
+                        });
+                      },
+                      activeColor: AppTheme.primaryOrange,
+                    );
+                  }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    viewModel.adicionarItem(
+                      produto,
+                      viewModel.quantidade,
+                      null,
+                      ingredientesSelecionados,
+                    );
+                    viewModel.limparItem();
+                    _qtdController.text = '1';
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryOrange),
+                  child: const Text('Adicionar ao Pedido'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,13 +144,17 @@ class _PedidoPageState extends State<PedidoPage> {
                       ElevatedButton.icon(
                         onPressed: viewModel.itemSelecionado != null
                             ? () {
-                                viewModel.adicionarItem(
-                                  viewModel.itemSelecionado!,
-                                  viewModel.quantidade,
-                                  null, // Obs will be in the list later or we can add here
-                                );
-                                viewModel.limparItem();
-                                _qtdController.text = '1';
+                                if (viewModel.itemSelecionado!.ingredientesDisponiveis.isNotEmpty) {
+                                  _showCustomizacaoModal(context, viewModel, viewModel.itemSelecionado!);
+                                } else {
+                                  viewModel.adicionarItem(
+                                    viewModel.itemSelecionado!,
+                                    viewModel.quantidade,
+                                    null,
+                                  );
+                                  viewModel.limparItem();
+                                  _qtdController.text = '1';
+                                }
                               }
                             : null,
                         icon: const Icon(Icons.add),
@@ -116,7 +181,7 @@ class _PedidoPageState extends State<PedidoPage> {
                             final item = viewModel.itens[index];
                             return ListTile(
                               title: Text(item.nome),
-                              subtitle: Text('${item.quantidade}x • R\$ ${item.preco.toStringAsFixed(2)}'),
+                              subtitle: Text(item.resumo),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
