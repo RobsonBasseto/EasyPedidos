@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class ItemPedidoModel extends Equatable {
-  final int id;
+  final String id; // Matches ProdutoModel.id (String)
   final String nome;
   final double preco;
   final int quantidade;
@@ -30,11 +30,33 @@ class ItemPedidoModel extends Equatable {
     return res;
   }
 
+  factory ItemPedidoModel.fromJson(Map<String, dynamic> json) {
+    return ItemPedidoModel(
+      id: json['id'].toString(),
+      nome: json['nome'],
+      preco: (json['preco'] as num).toDouble(),
+      quantidade: json['quantidade'] ?? 1,
+      observacao: json['observacao'] ?? '',
+      ingredientes: List<String>.from(json['ingredientes'] ?? []),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nome': nome,
+      'preco': preco,
+      'quantidade': quantidade,
+      'observacao': observacao,
+      'ingredientes': ingredientes,
+    };
+  }
+
   @override
   List<Object?> get props => [id, nome, preco, quantidade, observacao, ingredientes];
 
   ItemPedidoModel copyWith({
-    int? id,
+    String? id,
     String? nome,
     double? preco,
     int? quantidade,

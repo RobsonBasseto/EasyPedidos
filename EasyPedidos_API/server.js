@@ -32,7 +32,27 @@ let lanches = [
     nome: "X-Burger",
     preco: 25.90,
     ingredientes: ["Pão", "Hambúrguer", "Queijo"],
-    ingredientesDisponiveis: ["Pão", "Hambúrguer", "Queijo", "Alface", "Tomate", "Cebola", "Bacon", "Ovo", "Molho especial"],
+    ingredientesDisponiveis: ingredientes,
+    disponivel: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: uuidv4(),
+    nome: "X-Salada",
+    preco: 28.90,
+    ingredientes: ["Pão", "Hambúrguer", "Queijo", "Alface", "Tomate"],
+    ingredientesDisponiveis: ingredientes,
+    disponivel: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: uuidv4(),
+    nome: "X-Bacon",
+    preco: 32.90,
+    ingredientes: ["Pão", "Hambúrguer", "Queijo", "Bacon"],
+    ingredientesDisponiveis: ingredientes,
     disponivel: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()

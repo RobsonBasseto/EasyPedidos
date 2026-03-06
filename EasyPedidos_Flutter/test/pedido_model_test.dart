@@ -12,8 +12,8 @@ void main() {
         id: 1,
         dataHora: now,
         itens: const [
-          ItemPedidoModel(id: 1, nome: 'Burger', preco: 10, quantidade: 2),
-          ItemPedidoModel(id: 2, nome: 'Coke', preco: 5, quantidade: 1),
+          ItemPedidoModel(id: '1', nome: 'Burger', preco: 10, quantidade: 2),
+          ItemPedidoModel(id: '2', nome: 'Coke', preco: 5, quantidade: 1),
         ],
       );
 

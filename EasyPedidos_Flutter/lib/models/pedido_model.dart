@@ -48,6 +48,51 @@ class PedidoModel extends Equatable {
 
   Color get statusColor => status.color;
 
+  factory PedidoModel.fromJson(Map<String, dynamic> json) {
+    return PedidoModel(
+      id: json['id'],
+      dataHora: DateTime.parse(json['dataHora']),
+      status: StatusPedidoEnum.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => StatusPedidoEnum.emPreparo,
+      ),
+      itens: (json['itens'] as List)
+          .map((item) => ItemPedidoModel.fromJson(item))
+          .toList(),
+      formaPagamento: json['formaPagamento'] != null
+          ? FormaPagamentoEnum.values.firstWhere(
+              (e) => e.name == json['formaPagamento'],
+              orElse: () => FormaPagamentoEnum.dinheiro,
+            )
+          : null,
+      dataFaturamento: json['dataFaturamento'] != null
+          ? DateTime.parse(json['dataFaturamento'])
+          : null,
+      localConsumo: LocalConsumoEnum.values.firstWhere(
+        (e) => e.name == json['localConsumo'],
+        orElse: () => LocalConsumoEnum.noLocal,
+      ),
+      isMesa: json['isMesa'] ?? true,
+      identificador: json['identificador'] ?? '',
+      total: (json['total'] as num).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'dataHora': dataHora.toIso8601String(),
+      'status': status.name,
+      'itens': itens.map((item) => item.toJson()).toList(),
+      'formaPagamento': formaPagamento?.name,
+      'dataFaturamento': dataFaturamento?.toIso8601String(),
+      'localConsumo': localConsumo.name,
+      'isMesa': isMesa,
+      'identificador': identificador,
+      'total': total,
+    };
+  }
+
   @override
   List<Object?> get props => [
         id,
