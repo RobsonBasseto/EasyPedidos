@@ -1,11 +1,9 @@
 const API_URL = 'http://localhost:3000/api/lanches';
-
-const INGREDIENTES_PADRAO = [
-    "Pão", "Hambúrguer", "Queijo", "Alface", "Tomate", "Cebola", "Bacon", "Ovo", "Molho especial"
-];
+const ING_URL = 'http://localhost:3000/api/ingredientes';
 
 let state = {
     lanches: [],
+    ingredientes: [],
     isEditing: false
 };
 
@@ -19,9 +17,9 @@ const btnCancelar = document.getElementById('btnCancelar');
 const ingredientesList = document.getElementById('ingredientesList');
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    fetchLanches();
-    renderIngredientesCheckboxes();
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchIngredientes();
+    await fetchLanches();
 
     btnNovoLanche.addEventListener('click', openAddModal);
     btnCancelar.addEventListener('click', closeModal);
@@ -29,6 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Functions
+async function fetchIngredientes() {
+    try {
+        const response = await fetch(ING_URL);
+        state.ingredientes = await response.json();
+        renderIngredientesCheckboxes();
+    } catch (error) {
+        console.error('Erro ao buscar ingredientes:', error);
+    }
+}
+
 async function fetchLanches() {
     try {
         const response = await fetch(API_URL);
@@ -76,7 +84,7 @@ function renderTable() {
 
 function renderIngredientesCheckboxes() {
     ingredientesList.innerHTML = '';
-    INGREDIENTES_PADRAO.forEach(ing => {
+    state.ingredientes.forEach(ing => {
         const div = document.createElement('div');
         div.className = 'flex items-center mb-1';
         div.innerHTML = `
@@ -119,6 +127,7 @@ async function handleFormSubmit(e) {
         nome,
         preco: parseFloat(preco),
         ingredientes: selectedIngredientes,
+        ingredientesDisponiveis: state.ingredientes, // All ingredients are available for customization
         disponivel
     };
 
